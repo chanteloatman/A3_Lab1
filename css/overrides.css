@@ -142,3 +142,7 @@ sup { font-size: 0.7em; }
 	width:550px;
 	left: 250px;
 }
+
+.focusMini{
+  opacity: 0.5;
+}
