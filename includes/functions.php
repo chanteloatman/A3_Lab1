@@ -2,7 +2,7 @@
 // these are variables, just like JS variables
 $user = "root"; //user name
 $pass = "root"; //user password
-$host = "localhost"; //host we're using (apche inside of MAMP)
+$host = "localhost"; //host we're using (apache inside of MAMP)
 $db = "a3_cooperinfo"; //database we're connecting to
 
 //1. create a connection to the database
@@ -32,7 +32,7 @@ if (!$conn){
 if (isset($_GET['carModel'])){
   $car = $_GET['carModel'];
 
-  $myQuery = "SELECT * FROM mainmodel WHERE model = '$car'"; //this is simple
+  $myQuery = "SELECT * FROM mainmodel WHERE model = '$car'"; //this is a simple query using a variable for the car
   $result = mysqli_query($conn, $myQuery); //result holds the set
 
   $row = mysqli_fetch_assoc($result);

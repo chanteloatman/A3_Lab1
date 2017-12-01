@@ -1,46 +1,57 @@
 (function () {
   // start with retrieving the elements from the page, and then adding event handling. then write the logic. refer to the seasons example / homework
+  var carImages = document.querySelectorAll(".thumbInfo IMG");
 
-var carImages = document.querySelectorAll(".thumbInfo IMG"),
-modelInfo = document.querySelector(".modelInfo"),
-modelName = document.querySelector(".modelName"),
-modelPrice = document.querySelector(".priceInfo"),
-modelDetails = document.querySelector(".modelDetails"),
-appliedClass;
+  //NEW INFO WE ADDED IN CLASS
+  var carButtons = document.querySelectorAll('.data-ref');
+  const httpRequest = new XMLHttpRequest();
 
-function changeElements(){
+  //debugger;
+
+  function getCarData(){
   //let carImages = document.querySelector();
-  let objectIndex = carData[this.id];
-  //let opacityChange = querySelector(".data-ref");
-  //let focus = querySelector(".focusMini");
+    if (!httpRequest) {
+      alert('giving up, your browser sucks!');
+      return false;
+    }
 
-  modelName.classList.add(this.id);
-  modelPrice.classList.add(this.id);
-  modelDetails.classList.add(this.id);
+    httpRequest.onreadystatechange = processRequest;
+    httpRequest.open('GET', './includes/functions.php?carModel=' + this.id);
+    httpRequest.send();
+  }
 
-  modelName.firstChild.nodeValue = objectIndex.model;
-  modelPrice.firstChild.nodeValue = objectIndex.price;
-  modelDetails.firstChild.nodeValue = objectIndex.description;
+  function processRequest(){
+    //handle the stage of our AJAX call
+    let reqIndicator = document.querySelector('.request-state');
+    reqIndicator.textContent = httpRequest.readyState;
 
-  //focusMini.remove;
+    if (httpRequest.readyState === XMLHttpRequest.DONE){
+      if (httpRequest.status === 200){
+        //debugger;
+        let data = JSON.parse(httpRequest.responseText);
+        processResult(data);
+      } else {
+        alert('There was a problem with the request');
+      }
+    }
+  }
 
-  //opacityChange.opacity = 0.6;
-  //focusMini.opacity = 0.6;
+  function processResult(data){
+    const { modelName, pricing, modelDetails } = data;
 
-  carImages.forEach(function(image) {
-    image.classList.add('focusMini');
-  });
+    let model = document.querySelector('.modelName').textContent = modelName;
+    let price = document.querySelector('.priceInfo').innerHTML = pricing;
+    let desc = document.querySelector('.modelDetails').textContent = modelDetails;
 
-  this.classList.remove('focusMini');
+    carButtons.forEach(function(car, index) {
+      car.classList.add('nonActive');
+    });
 
+    document.querySelector(`#${data.model}`).classList.remove('nonActive');
+  }
 
-  appliedClass = this.id;
-
-}
 
   carImages.forEach(function(element, index) {
-  element.addEventListener('click', changeElements, false);
-});
-
-
+    element.addEventListener('click', getCarData, false);
+  });
 })();
